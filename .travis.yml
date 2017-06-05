@@ -18,7 +18,6 @@ env:
     - ES_JAVA_OPTS="-Xms256m -Xmx512m"
 
   matrix:
-    - COVERITY_ONLY=1
     # sort modules by test time with quickest modules first
     - MODULE='hadoop-parent/janusgraph-hadoop-2'
     - MODULE='lucene'
@@ -43,6 +42,7 @@ env:
     - MODULE='hbase-parent/janusgraph-hbase-098' ARGS='-Dtest=**/diskstorage/hbase/*'
     - MODULE='hbase-parent/janusgraph-hbase-098' ARGS='-Dtest=**/graphdb/hbase/*'
     - MODULE='cql'
+    - COVERITY_ONLY
 
 matrix:
   fast_finish: true
