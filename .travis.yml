@@ -18,6 +18,7 @@ env:
     - ES_JAVA_OPTS="-Xms256m -Xmx512m"
 
   matrix:
+    - COVERITY_ONLY=1
     # sort modules by test time with quickest modules first
     - MODULE='hadoop-parent/janusgraph-hadoop-2'
     - MODULE='lucene'
@@ -67,22 +68,32 @@ addons:
       version: "0.2.0-SNAPSHOT"
       description: "Scalable, distributed graph database"
     notification_email: janusgraph-ci@googlegroups.com
-    build_command: "mvn clean package -DskipTests=true --batch-mode"
+    build_command:
+      if [ -v COVERITY_ONLY ]; then
+        mvn clean package -DskipTests=true --batch-mode"
+      else
+        echo "Skipping coverity for non-coverity job"
+      fi
     branch_pattern: coverity_scan
 
 install:
-  - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then
-      # Build and install current module and dependencies. Handle output timeouts and retry on error.
-      travis_retry travis_wait \
-          mvn install --projects janusgraph-${MODULE} --also-make \
-          -DskipTests=true -Dmaven.javadoc.skip=true --batch-mode --show-version
-    fi
+  if [ "${COVERITY_SCAN_BRANCH}" == 1 ] || [ -v COVERITY_ONLY ]; then
+    echo "Skipping install build step in Coverity branch/job"
+  else
+    # Build and install current module and dependencies. Handle output timeouts and retry on error.
+    #travis_retry travis_wait \
+    #    mvn install --projects janusgraph-${MODULE} --also-make \
+    #    -DskipTests=true -Dmaven.javadoc.skip=true --batch-mode --show-version
+    echo "Would run build step"
+  fi
 
 script:
-  - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then
+  - if [ "${COVERITY_SCAN_BRANCH}" == 1 ] || [ -v COVERITY_ONLY ]; then
       # Build and test module. Handle output timeouts and retry with a clean build on error.
       travis_retry travis_wait 50 \
           mvn clean verify --projects janusgraph-${MODULE} ${ARGS}
+    else
+      echo "Skipping script build step in Coverity branch/job"
     fi
 
 # Syntax and more info: https://docs.travis-ci.com/user/notifications
