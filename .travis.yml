@@ -76,9 +76,9 @@ addons:
 
 install:
   - if [ "${COVERITY_SCAN_BRANCH}" == 1 ] || [ -v COVERITY_ONLY ]; then 
-      echo "Skipping install build step in Coverity branch/job";
-    else 
       echo "Would run install build step";
+    else 
+      echo "Skipping install build step in Coverity branch/job";
     fi
 
 script:
