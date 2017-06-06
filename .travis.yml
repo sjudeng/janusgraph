@@ -66,19 +66,18 @@ addons:
     project:
       name: "JanusGraph/janusgraph"
     notification_email: janusgraph-ci@googlegroups.com
-    build_command: 
-      - if [ -v COVERITY_ONLY ]; then 
-          echo "Would run coverity build";
-        else
-          echo "Skipping coverity for non-coverity job";
+    build_command_prepend:
+      - if ! [ -v  COVERITY_ONLY ]; then
+          echo "Skipping coverity for non-coverity job"
+          exit 0;
         fi
-    branch_pattern: coverity_scan
+    build_command: echo "Would run coverity build";
 
 install:
   - if [ "${COVERITY_SCAN_BRANCH}" == 1 ] || [ -v COVERITY_ONLY ]; then 
-      echo "Would run install build step";
-    else 
       echo "Skipping install build step in Coverity branch/job";
+    else 
+      echo "Would run install build step";
     fi
 
 script:
