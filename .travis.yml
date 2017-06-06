@@ -82,9 +82,9 @@ install:
 
 script:
   - if [ "${COVERITY_SCAN_BRANCH}" == 1 ] || [ -v COVERITY_ONLY ]; then
-      echo "Would run script build step";
-    else
       echo "Skipping script build step in Coverity branch/job";
+    else
+      echo "Would run script build step";
     fi
 
 # Syntax and more info: https://docs.travis-ci.com/user/notifications
