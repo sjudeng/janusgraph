@@ -76,6 +76,7 @@ addons:
           exit 0;
         fi
     build_command: echo "Would run coverity build";
+    branch_pattern: coverity_scan
 
 install:
   - if [ "${COVERITY_SCAN_BRANCH}" == 1 ] || [ -v COVERITY_ONLY ]; then 
