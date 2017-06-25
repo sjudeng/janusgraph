@@ -58,7 +58,6 @@ script:
   - if [ "${COVERITY_SCAN_BRANCH}" == 1 ] || [ -v COVERITY_ONLY ]; then
       echo "Skipping script build step in Coverity branch/job";
     else
-      travis_retry travis_wait 50 \
           mvn clean verify --projects janusgraph-${MODULE} ${ARGS};
     fi
 
