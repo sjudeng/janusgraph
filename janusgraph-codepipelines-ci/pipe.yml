@@ -15,7 +15,7 @@
 # In general, set the timeouts to twice the usual execution time for the compute type.
 # 480 minutes is the maximum build time now.
 #
-defaultComputeImage: maven:3-jdk-8
+defaultComputeImage: docker:dind
 defaultComputeType: BUILD_GENERAL1_LARGE
 defaultPrivilegedMode: true
 pipelines:
@@ -54,11 +54,12 @@ pipelines:
     - name: MODULE
       value: janusgraph-hbase-parent/janusgraph-hbase-10
   - name: es
-    privilegedMode: false
     timeout: 100
     env:
     - name: MODULE
       value: janusgraph-es
+    - name: ARGS
+      value: -Pes-docker
   - name: cql
     timeout: 118
     env:

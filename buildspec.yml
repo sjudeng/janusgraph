@@ -12,7 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 version: 0.1
+env:
+  variables:
+    JAVA_HOME: "/usr/lib/jvm/java-1.8-openjdk"
 phases:
+  install:
+    commands:
+      - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://0.0.0.0:2375 --storage-driver=overlay&
+      - timeout -t 15 sh -c "until docker info; do echo .; sleep 1; done"
+      - apk --update add openjdk8 maven
   build:
     commands:
       - echo Build started on `date`

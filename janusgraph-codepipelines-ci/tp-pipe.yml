@@ -15,7 +15,7 @@
 # In general, set the timeouts to twice the usual execution time for the compute type.
 # 480 minutes is the maximum build time now.
 #
-defaultComputeImage: maven:3-jdk-8
+defaultComputeImage: docker:dind
 defaultComputeType: BUILD_GENERAL1_LARGE
 defaultPrivilegedMode: true
 pipelines:
@@ -29,7 +29,6 @@ pipelines:
     - name: ARGS
       value: "-Dtest.skip.tp=false -DskipTests=true"
   - name: bdb-tp
-    privilegedMode: false
     timeout: 236
     env:
     - name: MODULE
@@ -46,7 +45,6 @@ pipelines:
     - name: ARGS
       value: "-Dtest.skip.tp=false -DskipTests=true"
   - name: test-tp
-    privilegedMode: false
     timeout: 64
     env:
     - name: MODULE

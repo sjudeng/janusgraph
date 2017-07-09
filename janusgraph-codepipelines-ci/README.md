@@ -111,7 +111,6 @@ pipelines:
     - name: MODULE
       value: janusgraph-hbase-parent/janusgraph-hbase-10
   - name: es
-    privilegedMode: false
     timeout: 100
     env:
     - name: MODULE
