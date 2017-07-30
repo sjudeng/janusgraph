@@ -17,6 +17,7 @@ package org.janusgraph.graphdb.relations;
 import com.carrotsearch.hppc.cursors.LongObjectCursor;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
+import org.apache.tinkerpop.gremlin.process.computer.traversal.TraversalVertexProgram;
 import org.janusgraph.core.schema.ConsistencyModifier;
 import org.janusgraph.core.PropertyKey;
 import org.janusgraph.diskstorage.Entry;
@@ -133,7 +134,8 @@ public class CacheVertexProperty extends AbstractVertexProperty {
 
     @Override
     public void remove() {
-        if (!tx().isRemovedRelation(super.longId()) && !tx().getConfiguration().isReadOnly()) {
+        final boolean isHaltedTraversal = type.name().equals(TraversalVertexProgram.HALTED_TRAVERSERS);
+        if (!tx().isRemovedRelation(super.longId()) && !(tx().getConfiguration().isReadOnly() && isHaltedTraversal)) {
             tx().removeRelation(this);
         }// else throw InvalidElementException.removedException(this);
     }
