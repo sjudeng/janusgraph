@@ -19,6 +19,7 @@ import org.janusgraph.CassandraStorageSetup;
 import org.janusgraph.core.JanusGraphVertex;
 import org.janusgraph.diskstorage.*;
 import org.janusgraph.diskstorage.cassandra.thrift.CassandraThriftStoreManager;
+import org.janusgraph.diskstorage.cassandra.utils.CassandraDaemonWrapper;
 import org.janusgraph.diskstorage.configuration.*;
 import org.janusgraph.diskstorage.keycolumnvalue.KeyColumnValueStore;
 import org.janusgraph.diskstorage.keycolumnvalue.KeyColumnValueStoreManager;
@@ -158,7 +159,12 @@ public class CassandraScanJobIT extends JanusGraphBaseTest {
     @Override
     public WriteConfiguration getConfiguration() {
         String className = getClass().getSimpleName();
-        ModifiableConfiguration mc = CassandraStorageSetup.getEmbeddedConfiguration(className);
+        final ModifiableConfiguration mc;
+        if ( CassandraDaemonWrapper.isStarted()) {
+            mc = CassandraStorageSetup.getEmbeddedConfiguration(className);
+        }  else {
+            mc = CassandraStorageSetup.getCassandraThriftConfiguration(className);
+        }
         return mc.getConfiguration();
     }
 

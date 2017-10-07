@@ -93,11 +93,16 @@ Specify a custom Elasticsearch test version using one of the version profiles an
 mvn clean install -pl janusgraph-es -Pes-docker,elasticsearch5
 ```
 
-### Running Hadoop tests with Cassandra-3 using CQL record reader (requires Docker)
+### Running Hadoop tests with Cassandra 3 (requires Docker)
 
-To run Hadoop tests with Cassandra-3 using the CQL record reader, start a Cassandra-3 Docker container and run tests with `-DskipCassandra3=false`. Note core HBase and Cassandra-2 Hadoop tests must be skipped when an external Cassandra instance is running.
+Hadoop tests with Cassandra 3 using the CQL record reader can be run against an external Cassandra 3 instance. For convenience a Compose file for starting and configuring a Cassandra Docker container is included with the JanusGraph source distribution.
 
 ```bash
-docker run --name jg-cassandra -p 9160:9160 -p 9042:9042 -e CASSANDRA_START_RPC=true -d cassandra:3.10
+CASSANDRA_VERSION=3.11.0 docker-compose -f janusgraph-cassandra/src/test/resources/docker-compose.yml up -d
+```
+
+Wait for the instance to start and then run tests with `-DskipCassandra3=false`. Note default tests must be skipped when testing against a Cassandra 3 instance.
+
+```bash
 mvn clean install -pl :janusgraph-hadoop-2 -DskipHBase -DskipCassandra -DskipCassandra3=false
 ```
