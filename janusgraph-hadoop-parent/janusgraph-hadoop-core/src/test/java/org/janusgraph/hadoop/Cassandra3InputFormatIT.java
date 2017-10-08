@@ -24,6 +24,7 @@ import java.io.IOException;
 
 public class Cassandra3InputFormatIT extends CassandraInputFormatIT {
 
+    @Override
     protected PropertiesConfiguration getGraphConfiguration() throws ConfigurationException, IOException {
         final PropertiesConfiguration config = super.getGraphConfiguration();
         config.setProperty("gremlin.hadoop.graphInputFormat", "org.janusgraph.hadoop.formats.cassandra.Cassandra3InputFormat");
@@ -33,7 +34,12 @@ public class Cassandra3InputFormatIT extends CassandraInputFormatIT {
     @Override
     public WriteConfiguration getConfiguration() {
         String className = CassandraInputFormatIT.class.getSimpleName();
-        ModifiableConfiguration mc = CassandraStorageSetup.getCassandraThriftConfiguration(className);
+        final ModifiableConfiguration mc;
+        if (CassandraStorageSetup.HOSTNAME == null) {
+            mc = CassandraStorageSetup.getEmbeddedConfiguration(className);
+        }  else {
+            mc = CassandraStorageSetup.getCassandraThriftConfiguration(className);
+        }
         return mc.getConfiguration();
     }
 }

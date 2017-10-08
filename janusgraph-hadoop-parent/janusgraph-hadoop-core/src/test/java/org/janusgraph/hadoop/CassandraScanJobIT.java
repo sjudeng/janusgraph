@@ -158,7 +158,12 @@ public class CassandraScanJobIT extends JanusGraphBaseTest {
     @Override
     public WriteConfiguration getConfiguration() {
         String className = getClass().getSimpleName();
-        ModifiableConfiguration mc = CassandraStorageSetup.getEmbeddedConfiguration(className);
+        final ModifiableConfiguration mc;
+        if (CassandraStorageSetup.HOSTNAME == null) {
+            mc = CassandraStorageSetup.getEmbeddedConfiguration(className);
+        }  else {
+            mc = CassandraStorageSetup.getCassandraThriftConfiguration(className);
+        }
         return mc.getConfiguration();
     }
 
